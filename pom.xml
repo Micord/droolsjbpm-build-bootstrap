@@ -22,7 +22,7 @@
   <!-- major.minor.micro.Final -->
   <!-- For example: 1.2.3 without the suffix ".Final" corrupts the OSGi eclipse updatesite -->
   <!-- For example: 1.2.3.M2 corrupts the OSGi eclipse updatesite update order -->
-  <version>7.58.0.Final</version>
+  <version>7.58.0.Final-Micord.9</version>
 
   <name>KIE (Drools, jBPM, OptaPlanner) parent</name>
   <description>
@@ -47,6 +47,7 @@
   <properties>
     <victims.updates>weekly</victims.updates>
     <illegaltransitivereportonly>false</illegaltransitivereportonly>
+    <nexus.url>https://repo.micord.ru</nexus.url>
 
     <!--
       CONVENTIONS:
@@ -294,7 +295,7 @@
     <version.xpp3>${version.xmlpull}</version.xpp3>
 
     <!-- Internal dependencies -->
-    <version.org.kie>7.58.0.Final</version.org.kie>
+    <version.org.kie>7.58.0.Final-Micord.9</version.org.kie>
     <version.org.drools>${version.org.kie}</version.org.drools>
     <version.org.optaplanner>${version.org.kie}</version.org.optaplanner>
     <version.org.jbpm>${version.org.kie}</version.org.jbpm>
@@ -420,7 +421,7 @@
          Default value is 1 to enable building on older machines as well (minimum is still about 4GiB of RAM memory). -->
     <gwt.compiler.localWorkers>1</gwt.compiler.localWorkers>
     <!-- property for productisation to know the last released version -->
-    <latestReleasedVersionFromThisBranch>7.58.0.Final</latestReleasedVersionFromThisBranch>
+    <latestReleasedVersionFromThisBranch>7.58.0.Final-Micord.9</latestReleasedVersionFromThisBranch>
     <version.io.takari.maven.plugins.compiler>1.13.5</version.io.takari.maven.plugins.compiler>
 
     <version.org.codehaus.plexus.plexus-io>3.0.0</version.org.codehaus.plexus.plexus-io>
@@ -502,64 +503,42 @@
   </properties>
 
   <repositories>
-    <repository>
-      <!-- Duplicating the Maven Central repository here (as it is already coming from Super POM) makes the build much faster,
-           as the Maven Central is now treated as the first (default) repository (because it is before the JBoss.org one).
-           Artifacts with release (fixed) versions are being downloaded primarily from there. Without the central being the
-           first repository the JBoss.org Nexus would be contacted first and since it is quite slow it slows down the build.
-           We use JBoss.org repo only to download our SNAPSHOTs. -->
-      <id>central</id>
-      <name>Central Repository</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
     <!-- Bootstrap repository to locate the parent pom when the parent pom has not been build locally. -->
-    <!-- Conventions are described in http://community.jboss.org/wiki/MavenGettingStarted-Developers -->
     <repository>
-      <id>jboss-public-repository-group</id>
-      <name>JBoss Public Repository Group</name>
-      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-      </snapshots>
+      <id>micord-public</id>
+      <name>micord-public</name>
+      <url>${nexus.url}/repository/maven-public</url>
+    </repository>
+    <repository>
+      <id>micord</id>
+      <name>micord</name>
+      <url>${nexus.url}/repository/maven-micord</url>
     </repository>
   </repositories>
-
   <pluginRepositories>
     <pluginRepository>
-      <!-- Duplicating the Maven Central repository here (as it is already coming from Super POM) makes the build much faster,
-           as the Maven Central is now treated as the first (default) repository (because it is before the JBoss.org one).
-           Artifacts with release (fixed) versions are being downloaded primarily from there. Without the central being the
-           first repository the JBoss.org Nexus would be contacted first and since it is quite slow it slows down the build.
-           We use JBoss.org repo only to download our SNAPSHOTs. -->
-      <id>central</id>
-      <name>Central Repository</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
+      <id>micord-public</id>
+      <name>micord-public</name>
+      <url>${nexus.url}/repository/maven-public</url>
     </pluginRepository>
     <pluginRepository>
-      <id>jboss-public-repository-group</id>
-      <name>JBoss Public Repository Group</name>
-      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
+      <id>micord</id>
+      <name>micord</name>
+      <url>${nexus.url}/repository/maven-micord</url>
     </pluginRepository>
   </pluginRepositories>
+  <distributionManagement>
+    <repository>
+      <id>micord</id>
+      <name>micord releases</name>
+      <url>${nexus.url}/repository/libs-releases-local</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>micord snapshots</name>
+      <url>${nexus.url}/repository/libs-snapshots-local</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <scm>
     <connection>scm:git:https://github.com/kiegroup/droolsjbpm-build-bootstrap.git</connection>
